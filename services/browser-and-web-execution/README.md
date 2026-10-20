@@ -42,6 +42,7 @@ The web was designed for humans sitting in front of browsers. AI agents that nee
 | [Moli](moli.md) [![⭐](https://img.shields.io/github/stars/lexmount/moli?style=social)](https://github.com/lexmount/moli) | Structured-first browser engine for AI agents | Rust CLI, stdio MCP, CDP, WebDriver Classic/BiDi, semantic-tree output | ✅ |
 | [Kernel](kernel.md) [![⭐](https://img.shields.io/github/stars/kernel/kernel-images?style=social)](https://github.com/kernel/kernel-images) | you build agents. we give them the internet. | CLI, Playwright/CDP/computer-use, kernel-cli skill, hosted MCP, hosted unikernel browsers | ✅ |
 | [Stealth Browser MCP](stealth-browser-mcp.md) [![⭐](https://img.shields.io/github/stars/vibheksoni/stealth-browser-mcp?style=social)](https://github.com/vibheksoni/stealth-browser-mcp) | Stealth browser automation for MCP-compatible AI agents | stdio/HTTP MCP, nodriver + CDP, dynamic hooks, in-repo skill | ✅ |
+| [FSB (Full Self Browsing)](fsb.md) [![⭐](https://img.shields.io/github/stars/fullselfbrowsing/FSB?style=social)](https://github.com/fullselfbrowsing/FSB) | DOM-first AI browser automation for Chrome and MCP clients. | MCP (stdio + local Streamable HTTP), browser-extension bridge, `fsb` Agent Skill | ✅ |
 
 
 

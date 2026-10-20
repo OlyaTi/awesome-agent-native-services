@@ -11,7 +11,7 @@
     "service_directory": "services",
     "content_digest": {
       "algorithm": "sha256",
-      "value": "69a675fc589aaa2d8f8945e47b365e365d6dab226ef2b2999f69e43de113e535",
+      "value": "4807bafe1326e75e5bf664eadf26767c27c02dabea9d3547ff9b2b619fbc875b",
       "input_paths": [
         "README.md",
         "skill.md",
@@ -46,6 +46,7 @@
         "services/browser-and-web-execution/cloudflare-browser-rendering.md",
         "services/browser-and-web-execution/crawl4ai.md",
         "services/browser-and-web-execution/firecrawl.md",
+        "services/browser-and-web-execution/fsb.md",
         "services/browser-and-web-execution/hronaut.md",
         "services/browser-and-web-execution/hyperbrowser.md",
         "services/browser-and-web-execution/jet-browser.md",
@@ -291,7 +292,7 @@
   },
   "counts": {
     "categories": 16,
-    "services": 255
+    "services": 256
   },
   "categories": [
     {
@@ -306,7 +307,7 @@
       "name": "Browser & Web Execution",
       "description": "Services that give AI agents a remote, managed browser runtime — so agents can navigate, interact with, and extract data from the web as an autonomous actor, without any human operating a browser on their behalf.",
       "dossier": "https://github.com/haoruilee/awesome-agent-native-services/blob/main/services/browser-and-web-execution/README.md",
-      "service_count": 27
+      "service_count": 28
     },
     {
       "id": "tool-access-and-integration",
@@ -1334,6 +1335,45 @@
       "latest_month_signal": null,
       "verified_at": null,
       "verification_sources": []
+    },
+    {
+      "id": "browser-and-web-execution/fsb",
+      "slug": "fsb",
+      "name": "FSB (Full Self Browsing)",
+      "tagline": "DOM-first AI browser automation for Chrome and MCP clients.",
+      "classification": "agent-native",
+      "status": "listed",
+      "lifecycle_status": "active",
+      "category": "browser-and-web-execution",
+      "website": "https://full-selfbrowsing.com",
+      "repository": "https://github.com/fullselfbrowsing/FSB",
+      "dossier": "https://github.com/haoruilee/awesome-agent-native-services/blob/main/services/browser-and-web-execution/fsb.md",
+      "source_path": "services/browser-and-web-execution/fsb.md",
+      "onboarding": {
+        "type": "mcp",
+        "pattern": "MCP + browser extension (local bridge)",
+        "instruction": "npx -y fsb-mcp-server@latest install --claude-code",
+        "url": "https://chromewebstore.google.com/detail/badgafnfchcihdfnjneklogedcdkmjfk"
+      },
+      "protocols": [
+        "agent-skill",
+        "mcp",
+        "websocket",
+        "cli",
+        "stdio",
+        "http"
+      ],
+      "mcp_status": "available",
+      "agent_skill_status": "available",
+      "latest_month_signal": "fsb-mcp-server v0.11.2 released 2026-10-14 and served as latest by the npm registry; last GitHub push 2026-10-20; full-selfbrowsing.com, the MCP README and the ClawHub listing HTTP 200 (verified 2026-10-20)",
+      "verified_at": "2026-10-20",
+      "verification_sources": [
+        "https://github.com/fullselfbrowsing/FSB/releases/tag/mcp-v0.11.2",
+        "https://registry.npmjs.org/fsb-mcp-server/latest",
+        "https://full-selfbrowsing.com",
+        "https://github.com/fullselfbrowsing/FSB/blob/main/mcp/README.md",
+        "https://clawhub.ai/lakshmanturlapati/full-selfbrowsing"
+      ]
     },
     {
       "id": "browser-and-web-execution/hronaut",

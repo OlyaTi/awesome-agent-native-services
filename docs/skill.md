@@ -65,7 +65,7 @@ These services can be joined with a single instruction, right now, with no human
 
 ---
 
-## Full Catalog — 16 Categories, 255 Services
+## Full Catalog — 16 Categories, 256 Services
 
 ### 1. Communication (16 services)
 *Give agents a first-class communication identity on the internet.*
@@ -91,7 +91,7 @@ These services can be joined with a single instruction, right now, with no human
 
 ---
 
-### 2. Browser & Web Execution (27 services)
+### 2. Browser & Web Execution (28 services)
 *Remote browser and web data extraction for agents.*
 
 | Service | Tagline | Onboarding |
@@ -123,6 +123,7 @@ These services can be joined with a single instruction, right now, with no human
 | [Moli](https://github.com/lexmount/moli) | Structured-first browser engine for AI agents | Build the Rust workspace, then run `moli fetch`, `moli serve`, or `moli mcp` |
 | [Kernel](https://www.kernel.sh) | you build agents. we give them the internet. | `brew install kernel/tap/kernel` or `npm install -g @onkernel/cli`, then `kernel browsers create -o json` |
 | [Stealth Browser MCP](https://github.com/vibheksoni/stealth-browser-mcp) | Stealth browser automation for MCP-compatible AI agents | Clone repo → `pip install -r requirements.txt` → `claude mcp add-json stealth-browser-mcp` |
+| [FSB (Full Self Browsing)](https://full-selfbrowsing.com) | DOM-first AI browser automation for Chrome and MCP clients. | `npx -y fsb-mcp-server@latest install --claude-code` + Chrome extension — skill: `npx skills add fullselfbrowsing/FSB --skill fsb` |
 
 ---
 
