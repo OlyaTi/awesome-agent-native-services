@@ -28,7 +28,7 @@ Homepage H1, read 2026-09-20: **"Persistent memory for AI agents"**. Supporting 
 
 https://github.com/mnemoverse/mcp-memory-server
 
-README lead: **"Persistent memory for AI agents over MCP. Tell it a recalled memory helped or misled, and it re-ranks what comes back next. One key across Claude Code, Cursor, VS Code and ChatGPT."**
+README lead: **"Hosted long-term memory for AI agents over MCP."** The same paragraph: "Rating a recalled memory as helpful or misleading re-ranks what comes back next (`memory_feedback`)." ChatGPT connects to the remote connector with OAuth, not with the API key.
 
 The MCP server is MIT (`LICENSE` in the repository, `"license": "MIT"` on npm), and so is the Python SDK (`mnemoverse` on PyPI carries the MIT classifier). The memory engine behind both is proprietary and hosted, with a free tier, and only the clients are published as source. No self-hostable build of the engine is published; Enterprise customers can self-host it by agreement ([pricing](https://mnemoverse.com/docs/api/pricing)).
 
@@ -112,9 +112,9 @@ Removing stored memory is not an MCP tool on either path: it is an administrativ
 
 Mnemoverse keeps what an agent learns outside its context window and returns it in whatever tool the agent is running in next. A decision made while pairing in Claude Code is available in Cursor an hour later under the same account, and in a ChatGPT connector the same evening, because all of them talk to one hosted store rather than to per-tool instruction files.
 
-The primitive that separates it from a vector index is outcome feedback. After a recall the agent calls `memory_feedback` with the identifiers it used and an outcome score, and the service moves those entries in future ranking. Similarity alone never changes because advice turned out to be wrong; a reported outcome does. Recall also expands along Hebbian links between the concepts attached to entries, so a query can reach an entry that shares no wording with it.
+The primitive that separates it from a vector index is outcome feedback: after a recall the agent calls `memory_feedback` with the identifiers it used, and rating a recalled memory as helpful or misleading re-ranks what comes back next. Similarity alone never changes because advice turned out to be wrong; a reported outcome does.
 
-**Boundary, stated rather than implied.** The agent decides what to offer for storage; `memory_write` is an explicit call, not a transcript miner. What the service does on its own at write time is score the candidate and decide whether it clears an importance gate, returning `stored`, the computed `importance`, and a `reason` for each atom. A read returns provenance with each hit, including the author principal, and a read can exclude one author. Several other entries in this category are explicit-write services on the same terms.
+**Boundary, stated rather than implied.** The agent decides what to offer for storage; `memory_write` is an explicit call, not a transcript miner. What the service does on its own at write time is decide whether to keep the candidate: an importance gate may filter low-value writes, and the result says for each atom whether it was stored or filtered, with a `reason`. A read returns provenance with each hit, including the author principal, and a read can exclude one author. Several other entries in this category are explicit-write services on the same terms.
 
 ---
 
@@ -122,8 +122,8 @@ The primitive that separates it from a vector index is outcome feedback. After a
 
 | Criterion | Evidence |
 |---|---|
-| **Agent-first positioning** | "Persistent memory for AI agents" is the homepage H1, https://mnemoverse.com/ . The server README opens with "Persistent memory for AI agents over MCP", https://github.com/mnemoverse/mcp-memory-server |
-| **Agent-specific primitive** | `memory_feedback`: the agent marks recalled entries as helpful or misleading and later recall is re-ranked from that outcome. A human has no reason to grade retrieval results one by one inside a task loop. https://mnemoverse.com/docs/api/remote-mcp-server |
+| **Agent-first positioning** | "Persistent memory for AI agents" is the homepage H1, https://mnemoverse.com/ . The server README opens with "Hosted long-term memory for AI agents over MCP", https://github.com/mnemoverse/mcp-memory-server |
+| **Agent-specific primitive** | `memory_feedback`: rating a recalled memory as helpful or misleading re-ranks what comes back next. A human has no reason to grade retrieval results one by one inside a task loop. https://mnemoverse.com/docs/api/remote-mcp-server |
 | **Autonomy-compatible control plane** | After one sign-in or one key, the agent writes, reads and reports outcomes with no per-action confirmation. The ceiling is explicit: per-organization rate limits (free plan 60 requests per minute, 1,000 queries per day, 10,000 atoms), OAuth scopes that can be read-only, and room membership fixed at `read` or `read_write`. https://mnemoverse.com/docs/api/reference , https://mnemoverse.com/docs/api/rooms |
 | **M2M integration surface** | Streamable HTTP MCP at `https://mcp.mnemoverse.com/mcp`, stdio MCP via `npx -y @mnemoverse/mcp-memory-server@latest`, REST at `https://core.mnemoverse.com/api/v1`, a Python SDK (`pip install mnemoverse`), plus a Claude Code plugin, a Cursor plugin, a Gemini CLI extension and a VS Code extension. https://mnemoverse.com/docs/api/agent-setup , https://github.com/mnemoverse/mcp-memory-server |
 | **Identity / delegation** | OAuth 2.1 with PKCE and the scopes `memory:read`, `memory:write`, `offline_access`, revocable from the console; a connector granted only `memory:read` can recall but not write. Dynamic client registration is restricted to an allowlist of callback hosts plus loopback. Room invite codes carry a `read` or `read_write` scope fixed when the code is minted. https://mnemoverse.com/docs/api/remote-mcp-server |
@@ -134,9 +134,8 @@ The primitive that separates it from a vector index is outcome feedback. After a
 
 | Primitive | Description |
 |---|---|
-| **Atom** | One stored memory with its content, concepts, and domain; the write returns whether it cleared the importance gate, its computed importance, and the reason |
-| **Outcome feedback** | `memory_feedback` reports that recalled atoms helped or misled; the report changes how those atoms rank in later recall, alongside similarity rather than instead of it |
-| **Hebbian concept link** | Associations between the concepts carried by atoms; a read can expand along them, and reported outcomes update them |
+| **Atom** | One stored memory with its content, concepts, and domain; the write returns whether it was stored or filtered, and the reason |
+| **Outcome feedback** | `memory_feedback`: rating a recalled memory as helpful or misleading re-ranks what comes back next, alongside similarity rather than instead of it |
 | **Domain** | A named partition of one account's memory, and also the address form a shared room takes on read and write |
 | **Room (Beta)** | A memory pool several accounts read and write, entered with a `mnvr_...` invite code whose scope is fixed at mint, with membership checked on every request |
 | **Vault alias** | A named reference to a stored secret that an agent can list and use by name; the value is never returned to the model |
@@ -148,7 +147,7 @@ The primitive that separates it from a vector index is outcome feedback. After a
 1. A human creates the account once and either completes the OAuth consent screen in the browser or copies one API key from the console.
 2. The agent connects: the remote connector negotiates OAuth 2.1 with PKCE and stores its own tokens, or the local package starts under `npx` with the key from its config.
 3. During work the agent calls `memory_read` or `memory_list_recent` before acting, and `memory_write` when a decision, correction or preference is worth keeping. No approval step stands between the call and the store.
-4. After using what came back, the agent calls `memory_feedback` with the atom identifiers and an outcome score, which moves those atoms for later recall.
+4. After using what came back, the agent calls `memory_feedback` with the atom identifiers; rating a recalled memory as helpful or misleading re-ranks what comes back next.
 5. In a later session, in a different tool, the same account recalls the same memory. For work shared across accounts the agent creates a room, mints an invite, and the other side joins with the code.
 6. The agent stays inside the ceiling it was given: scopes, per-organization rate limits, and room scope. Exceeding a limit returns `429 RATE_LIMITED` with the headers needed to back off.
 
@@ -192,7 +191,7 @@ The human keeps standing controls rather than per-call approval: scopes can be n
 | Alternative | Why It Fails |
 |---|---|
 | **Per-tool instruction files** (`CLAUDE.md`, `AGENTS.md`, `.cursorrules`) | Versioned and readable, but each copy belongs to one repository and one tool. Nothing follows the agent into the next tool or the next session, and there is no ranking at all |
-| **A bare vector store behind RAG** | Retrieves by similarity, and similarity does not change because a retrieved item turned out to be wrong. There is no place to report an outcome and nothing re-ranks from one |
+| **A bare vector store behind RAG** | Retrieves by similarity, and similarity does not change because a retrieved item turned out to be wrong. There is no place to report an outcome |
 | **Application-owned chat history** | A transcript inside one product is not an independently addressable store that other agents, under their own credentials and scopes, can read and write |
 | **A shared database with an agent wrapper** | Gives storage and queries but no agent-facing contract: no scoped delegation an agent can hold, no provenance on read, no outcome signal, and no cross-account room with a membership check on every request |
 
@@ -202,7 +201,7 @@ The human keeps standing controls rather than per-call approval: scopes can be n
 
 - **Cross-tool continuity** - A decision made in Claude Code is recalled in Cursor or VS Code later the same day under one account, with no copying between configuration files.
 - **Stop re-explaining the project** - Stack, conventions and deployment facts are written once and recalled at the start of each session instead of being restated in every prompt.
-- **Ranking that follows outcomes** - An agent that reports which recalled entries actually helped gets those entries first next time, which matters once a store outgrows hand curation.
+- **Outcomes, not only similarity** - Rating a recalled memory as helpful or misleading re-ranks what comes back next, which matters once a store outgrows hand curation.
 - **Shared team memory** - A room lets several accounts accumulate lessons about one codebase in a single pool, with each entry carrying its author and each invite carrying a fixed scope.
 - **Unattended agents** - The API-key path keeps working through host application account switches and sign-outs, so a scheduled or CI agent does not silently lose memory.
 - **Secrets by alias** - An agent lists vault aliases and refers to a credential by name, so the value never enters the model's context.
